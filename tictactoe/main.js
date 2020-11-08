@@ -6,23 +6,54 @@ console.log("JavaScript file is running...");
 // Global currentPlayer toggler
 let currPlayer = "X";
 const gameStatus = document.querySelector(".game-status");
-gameStatus.innerText = `It is now ${currPlayer}'s turn`;
+const currentPlayerTurn = () => gameStatus.innerText = `It is now ${currPlayer}'s turn, please click a cell`;
+/**
+ * SwitchPlayer from letter "X" or "O"
+ */
+const switchPlayer = () => {
+    // currPlayer = !currPlayer;
+    // currentPlayer = currentPlayer === "X" ? "O" : "X";
+    if (currPlayer === "X") {
+        currPlayer = "O";
+    } else if (currPlayer === "O") {
+        currPlayer = "X";
+    }
+    gameStatus.innerHTML = currentPlayerTurn();
+}
 
 /**
  * Handle cell clicked function
  */
 const handleCellClicked = (cell) => {
-    if (cell.innerHTML !== '' || cell.innerHTML !== "X") {
-        handle
+    // if empty fill "O" OR if NOT 
+    if (cell.innerHTML === '' && currPlayer === "X") {
+        console.log("Handle X is executing");
+        handleXPlayer(cell);
+        switchPlayer();
+    } else if (cell.innerHTML === '' && currPlayer === "O") {
+        console.log("Handle O is executing");
+        handleOPlayer(cell);
+        switchPlayer(); 
     }
 }
 
 /**
  * Handle "O" Player
  */
-const handleOPlayer = () => {
-
+const handleOPlayer = (cell) => {
+    cell.innerText = "O";
+    cell.classList.add("optionO");
+    cell.classList.remove("optionX");
 }
+/**
+ * Handle "X" Player
+ */
+const handleXPlayer = (cell) => {
+    cell.innerText = "X";
+    cell.classList.add("optionX");
+    cell.classList.remove("optionO");
+}
+
 // Hmm what kind of data-structures to store the player1/player2 decisions? 
 // Data Structure Storing the possible winningConditions? 
 const winningConditions = [
@@ -40,7 +71,6 @@ const player1Choices = [
     [0, 1, 2],
     [3, 4, 5]
 ];
-const player2Choices = [];
 
 // Player Objects
 const player1 = {
@@ -53,7 +83,6 @@ const player2 = {
     choices: [],
     isPlayed: true
 }
-
 
 
 // Cached Array of All Queried <divs> 
@@ -76,24 +105,13 @@ const pushesPlayerChoices = (cells) => {
 const toggleXO = (cells) => {
     cells.forEach(cell => {
         cell.addEventListener("click", (evt) => {
-            helperToggleXO(evt.target);
+            handleCellClicked(evt.target);
+            // gameStatus.innerText = `${cell.innerText} has just played, it is now the next player's turn`;
         });
     })
 }
 
-// clickHelperFunction that get's executed! 
-const helperToggleXO = (cell) => {
-    if (cell.innerText !== "X") {
-        cell.innerText = "X";
-        cell.classList.add("optionX");
-        cell.classList.remove("optionO");
-    } else if (cell.innerText !== "O") {
-        cell.innerText = "O"
-        cell.classList.add("optionO");
-        cell.classList.remove("optionX");
-    }
-    gameStatus.innerText = `${cell.innerText} has just played, it is now the next player's turn`;
-}
+
 
 // * Reset Button* 
 const resetBtn = document.querySelector("#reset");
