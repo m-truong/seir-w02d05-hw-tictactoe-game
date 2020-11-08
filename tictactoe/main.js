@@ -5,7 +5,8 @@ console.log("JavaScript file is running...");
 
 // Hmm what kind of data-structures to store the player1/player2 decisions? 
 // Data Structure Storing the possible winningConditions? 
-const winningConditions = "012345678147258048246";
+const winningArray = ["012", "345", "678", "147", "258", "048", "246"]
+const winningNumbers = "012345678147258048246";
 
 let playerXChoices = "";
 let playerOChoices = "";
@@ -43,13 +44,35 @@ const addPlayerChoice = (cell) => {
  * For loop that checks if playerXorO's choices match any substring! 
  */
 
-const winValidation = () => {
+const winValidation = (stringCode) => {
+    // console.log("PlayerX Choices are " + arg1);
+    for (let k = 0; k < stringCode.length; k++) { // won't execute for length < 3 (minum 3) 
+        if (stringCode.length >= 3) { // greater or = to 3 length
+            let substring = stringCode.substr(k, k + 3);
+            console.log("Did this execute? " + substring);
+            if (winningNumbers.includes(substring)) {
+                gameStatus.innerText = `The game is over, ${currPlayer} has won!`
+                removeXO(clickedCells);
+            }
 
+
+
+            // for (let combo in winningArray) {
+            //     if (combo === substring) {
+
+            //     }
+            // }
+        }
+    }
+
+    // console.log("PlayerO Choices are " + arg2);
 }
+
 
 // Global currentPlayer toggler
 let currPlayer = "X";
 const gameStatus = document.querySelector(".game-status");
+gameStatus.innerText = `Please click a cell to start the game`;
 const currentPlayerTurn = () => gameStatus.innerText = `It is now ${currPlayer}'s turn, please click a cell`;
 /**
  * SwitchPlayer from letter "X" or "O"
@@ -74,13 +97,17 @@ const handleCellClicked = (cell) => {
         console.log("Handle X is executing");
         handleXPlayer(cell);
         addPlayerChoice(cell);
+        winValidation(playerXChoices);
         switchPlayer();
     } else if (cell.innerHTML === '' && currPlayer === "O") {
         console.log("Handle O is executing");
         handleOPlayer(cell);
         addPlayerChoice(cell);
+        winValidation(playerOChoices);
         switchPlayer();
     }
+    // Note: this is using globally-scoped VARIABLE! 
+    // winValidation(playerXChoices, playerOChoices); 
 }
 /**
  * Handle "X" Player
@@ -99,13 +126,8 @@ const handleOPlayer = (cell) => {
     cell.classList.remove("optionX");
 }
 
-
-
-
-
 // Cached Array of All Queried <divs> 
 const clickedCells = document.querySelectorAll(".cell");
-
 
 // loop through all cell-nodes in querySeletorAll Array and addEventListener 
 const toggleXO = (cells) => {
@@ -116,7 +138,11 @@ const toggleXO = (cells) => {
         });
     })
 }
-
+const removeXO = (cells) => {
+    cells.forEach(cell => {
+        cell.removeEventListener("click", handleCellClicked);
+    })
+}
 // * Reset Button* 
 const resetBtn = document.querySelector("#reset");
 // Adds a Reset Button EventListener with resetAllCells() callback
@@ -127,7 +153,7 @@ resetBtn.addEventListener("click", () => {
     playerXChoices = "";
     console.log(playerXChoices);
     playerOChoices = "";
-    console.log(playerOChoices); 
+    console.log(playerOChoices);
 });
 
 
