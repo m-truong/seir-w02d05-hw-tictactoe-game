@@ -1,26 +1,32 @@
 /**
  * Cached DOM Nodes
- */ 
+ */
 const clickedCells = document.querySelectorAll(".cell");
 const gameStatus = document.querySelector(".game-status");
 gameStatus.innerText = `Please click a cell to start the game`;
 
 /**
- * Global currPlayer Toggler
+ * Global Current Player Toggler
  */
 let currPlayer = "X";
 const currentPlayerTurn = () => gameStatus.innerText = `It is now ${currPlayer}'s turn, please click a cell`;
 
+// Loops Through All Cells and Adds "Click" Listener  
+const toggleXO = (cells) => {
+    cells.forEach(cell => {
+        cell.addEventListener("click", (evt) => {
+            handleCellClicked(evt.target);
+        });
+    })
+}
 /**
  * Handle Cell Clicked Function
  */
 const handleCellClicked = (cell) => {
     if (cell.innerHTML === '' && currPlayer === "X") {
-        console.log("Handle X is executing");
         handleXPlayer(cell);
         switchPlayer();
     } else if (cell.innerHTML === '' && currPlayer === "O") {
-        console.log("Handle O is executing");
         handleOPlayer(cell);
         switchPlayer();
     }
@@ -107,15 +113,6 @@ const winningConditions = (cells) => {
     }
 }
 
-// loop through all cell-nodes in querySeletorAll Array and addEventListener 
-const toggleXO = (cells) => {
-    cells.forEach(cell => {
-        cell.addEventListener("click", (evt) => {
-            handleCellClicked(evt.target);
-        });
-    })
-}
-
 // * Reset Button * //
 const resetBtn = document.querySelector("#reset");
 resetBtn.addEventListener("click", () => {
@@ -124,5 +121,5 @@ resetBtn.addEventListener("click", () => {
     });
 });
 
-// =========== START OF ADD-EVENT-LISTENER INVOKATIONS ========== // 
+// ===== Adds Event Listeners Here ===== // 
 toggleXO(clickedCells);
